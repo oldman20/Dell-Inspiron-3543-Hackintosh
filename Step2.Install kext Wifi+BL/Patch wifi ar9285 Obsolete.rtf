@@ -1,0 +1,24 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fnil\fcharset0 Verdana;}
+{\colortbl;\red255\green255\blue255;\red16\green16\blue16;\red19\green0\blue155;}
+{\*\expandedcolortbl;;\cssrgb\c7451\c7451\c7451;\cssrgb\c10196\c5098\c67059;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs28 \cf2 \expnd0\expndtw0\kerning0
+AR9285/AR3011 requirements:\
+- toledaARPT.kext for WiFi: {\field{\*\fldinst{HYPERLINK "http://www.tonymacx86.com/network/104850-guide-airport-pcie-half-mini-v2.html"}}{\fldrslt \cf3 \ul \ulc3 http://www.tonymacx86.com/network/104850-guide-airport-pcie-half-mini-v2.html}}. Direct link for those unable to click a few times: {\field{\*\fldinst{HYPERLINK "https://github.com/toleda/wireless_half-mini/raw/master/Deprecated%20Files/airport_kext_enabler/toledaARPT.kext.zip"}}{\fldrslt \cf3 \ul \ulc3 https://github.com/toleda/wireless_half-mini/raw/master/Deprecated Files/airport_kext_enabler/toledaARPT.kext.zip}}\
+- IOath3kfrmwr.kext for bluetooth: {\field{\*\fldinst{HYPERLINK "https://github.com/RehabMan/OS-X-Atheros-3k-Firmware"}}{\fldrslt \cf3 \ul \ulc3 https://github.com/RehabMan/OS-X-Atheros-3k-Firmware}}\
+\
+For AR9285/AR9287, you can also use ProBookAtheros.kext. It will even work on Snow Leopard. It is available from the ProBook repo: {\field{\*\fldinst{HYPERLINK "https://github.com/RehabMan/HP-ProBook-4x30s-DSDT-Patch"}}{\fldrslt \cf3 \ul \ulc3 https://github.com/RehabMan/HP-ProBook-4x30s-DSDT-Patch}} (direct link to zip: {\field{\*\fldinst{HYPERLINK "https://github.com/RehabMan/HP-ProBook-4x30s-DSDT-Patch/archive/master.zip"}}{\fldrslt \cf3 \ul \ulc3 https://github.com/RehabMan/HP-ProBook-4x30s-DSDT-Patch/archive/master.zip}})\
+\
+In some laptops, after installing supported WiFi hardware and enabling the driver as discussed above, the radio may refuse to power up. As a result, no networks are seen. Correct ACPI patches can sometimes help (eg. correct "OS Check Fix" patch). In other cases, even that is not enough (you will notice it affects both Windows, OS X and perhaps Linux). For half-mini PCIe, you can tape pin 20 to disable the "radio disable" function. For NGFF/M.2, tape pins 54 and 60.\
+\
+Stay away from 'Android File Transfer'. It will interfere with correct operation of USB and badly affects BrcmPatchRAM if it is installed. This post has some information that might be useful if you think you need to use it: {\field{\*\fldinst{HYPERLINK "http://www.tonymacx86.com/el-capitan-laptop-support/185785-bluetooth-bcm20702a0-problem-usb.html#post1200910"}}{\fldrslt \cf3 \ul \ulc3 http://www.tonymacx86.com/el-capita...tooth-bcm20702a0-problem-usb.html#post1200910}}\
+\
+Similar to the Android File Transfer problem, Google Chrome (evidently a problem specific to Google's engineers) will also hook all USB ports. Sometimes this causes a problem. Personally, I don't see why a web browser should be hooking USB ports at the kernel level, so I always disable this "feature". Visit chrome://flags/#enable-webusb, and you can disable it.\
+\
+Note: It appears the webusb option has been removed from the latest version of Chrome.\
+\
+Note: If you experience slow WiFi after a sleep/wake cycle, disable "Wake for network access" in SysPrefs->Energy Saver.}

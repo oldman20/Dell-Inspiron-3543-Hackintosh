@@ -1,0 +1,4 @@
+Add 
+	darkwake=0 into boot-flag
+Patch	#usb_prw_0x0d_xhc.txt into DSDT
+Require finish Native PowerManager before

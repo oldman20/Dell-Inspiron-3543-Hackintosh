@@ -1,0 +1,83 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf400
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\froman\fcharset0 Times-Roman;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 https://www.youtube.com/watch?v=Dcs5t_23Ge0\
+https://www.tonymacx86.com/threads/guide-laptop-backlight-control-using-applebacklightinjector-kext.218222/\
+******WITH CLEAR INSTALL, MAYBE NOT NEED INSTALL APPLEINJECT\
+### Installing Xcode command line tools:(Verify if it install)\
+\
+git\
+\
+### Making a directory to deal with patching process:\
+\
+mkdir ~/Projects\
+cd ~/Projects\
+\
+### Cloning RehabMan\'92s ProBook repo:\
+\
+git clone https://github.com/RehabMan/HP-ProBook-4x30s-DSDT-Patch probook.git\
+\
+### Cloning RehabMan\'92s Clover Laptop config repo:\
+\
+git clone https://github.com/RehabMan/OS-X-Clover-Laptop-Config.git guide.git\
+\
+### Downloading and Installing iasl compiler:\
+\
+cd ~/Downloads\
+curl --remote-name --progress-bar --location https://bitbucket.org/RehabMan/acpica/downloads/iasl.zip\
+unzip iasl.zip\
+sudo cp iasl /usr/bin\
+\
+### Building patch files:\
+\
+cd ~/Projects/guide.git\
+make\
+\
+###
+\f1 \cf2 \expnd0\expndtw0\kerning0
+You will find the resulting SSDT-PNLF.aml at ~/Projects/guide.git/build/SSDT-PNLF.aml.\
+\pard\pardeftab720\sl280\partightenfactor0
+\cf2 AppleBacklightInjector.kext is at ~/Projects/probook.git/kexts/AppleBacklightInjector.kext.\
+And the patch required is in ~/Projects/guide.git/config_patches.plist.\
+\
+\pard\pardeftab720\sl280\partightenfactor0
+
+\b \cf2 Installation
+\b0 \
+\
+To use this technique requires three components:\
+- SSDT-PNLF.aml in ACPI/patched\
+- AppleBacklight patches in config.plist/KernelAndKextPatches/KextsToPatch\
+- AppleBacklightInjector.kext installed to /L/E\
+Add the patch marked with comment "change F%uT%04x to F%uTxxxx in AppleBacklightInjector.kext (credit RehabMan)" from ~/Projects/guide.git/config_patches.plist to your own config.plist at EFI/Clover/config.plist. Use a plist editor such as Xcode or PlistEdit Pro to copy/paste. DO NOT use Clover Configurator.\
+\pard\pardeftab720\sl280\partightenfactor0
+
+\f0 \cf0 \kerning1\expnd0\expndtw0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 ### I
+\f1 \cf2 \expnd0\expndtw0\kerning0
+Install AppleBacklightInjector.kext to /L/E:
+\f0 \cf0 \kerning1\expnd0\expndtw0 \
+\
+sudo cp -R ~/Downloads/ /Library/Extensions\
+\
+\pard\pardeftab720\sl280\partightenfactor0
+
+\f1 \cf2 \expnd0\expndtw0\kerning0
+And since after doing all these tasks it will be the first time you are loading AppleBacklight.kext, and this fix involves a Clover hotpatch, you will likely not have it working on first reboot. So right after booting with all components in place, rebuild cache:
+\f0 \cf0 \kerning1\expnd0\expndtw0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 ### Rebuilding cache:\
+\
+sudo kextcache -i /\
+\
+\pard\pardeftab720\sl280\partightenfactor0
+
+\f1 \cf2 \expnd0\expndtw0\kerning0
+Then reboot.\
+\
+Clover can only patch kexts in kernel cache, and upon first reboot, it will not be in cache, which is why the rebuild cache and reboot is required.}

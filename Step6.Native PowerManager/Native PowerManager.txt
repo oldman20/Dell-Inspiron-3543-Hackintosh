@@ -1,0 +1,96 @@
+https://www.tonymacx86.com/threads/guide-native-power-management-for-laptops.175801/
+========
+Disable Hibernation
+
+Be aware that hibernation (suspend to disk or S4 sleep) is not supported on hackintosh.
+You should disable it:
+sudo pmset -a hibernatemode 0
+sudo rm /var/vm/sleepimage
+sudo mkdir /var/vm/sleepimage
+ 
+Always check your hibernatemode after updates and disable it. System updates tend to re-enable it, although the trick above (making sleepimage a directory) tends to help.
+
+And it may be a good idea to disable the other hibernation related options:
+sudo pmset -a standby 0
+sudo pmset -a autopoweroff 0
+ 
+=========
+Custom SSDT.aml using ssdtPRGen.sh
+To prepare, you only need to do the first two commands:
+With newer computers (Broadwell, Skylake, and future), make sure you use the beta branch:
+cd ~
+curl -o ./ssdtPRGen.sh https://raw.githubusercontent.com/Piker-Alpha/ssdtPRGen.sh/Beta/ssdtPRGen.sh
+chmod +x ./ssdtPRGen.sh
+
+#Then you can run the script:
+./ssdtPRGen.sh
+
+When it asks if you want to copy to /Extra just respond 'n'. Same for opening ssdt.dsl... respond 'n'.
+
+The results are at ~/Library/ssdtPRGen/SSDT.aml.
+
+Assuming your EFI partition is mounted at /Volumes/EFI, copy that file to EFI partition, /EFI/Clover/ACPI/patched/SSDT.aml
+
+cd ~
+cp ~/Library/ssdtPRGen/ssdt.aml /Volumes/EFI/EFI/Clover/ACPI/patched/SSDT.aml
+ 
+=========================
+Testing PM:
+cd ~/Downloads
+sudo mkdir /kexts
+sudo cp -R AppleIntelInfo.kext /kexts
+ 
+Now load it:
+sudo kextutil /kexts/AppleIntelInfo.kext
+
+Now use your computer to do a variety of tasks, benchmarks, etc.
+You can look at the AppleIntelInfo.kext results:
+
+# view with page control
+sudo cat /tmp/AppleIntelInfo.dat|more
+ 
+Or make a copy of the file that you can load in TextEdit:
+Code (Text):
+
+# create copy of it
+sudo cp /tmp/AppleIntelInfo.dat AppleIntelInfo.txt
+# open in TextEdit
+open AppleIntelInfo.txt
+ In addition, for Ivy Bridge and later (eg. Ivy, Haswell, Broadwell, Skylake, KabyLake, etc), you should run IORegistryExplorer and verify that X86PlatformPlugin is loading under the CPU0 node.
+===================
+How to Test Power Management
+
+1. Download and compile AppleIntelInfo.kext using XCode. Or download here: View attachment AppleIntelInfo.kext.zip .
+
+2. Drag AppleIntelInfo.kext to desktop
+
+3. Open Terminal
+
+4. Type:
+
+Code (Text):
+sudo -s
+5. Type:
+
+Code (Text):
+chown -R 0:0 ~/Desktop/AppleIntelInfo.kext
+6. Type:
+
+Code (Text):
+chmod -R 755 ~/Desktop/AppleIntelInfo.kext
+7. Type:
+
+Code (Text):
+kextload ~/Desktop/AppleIntelInfo.kext
+8. Type:
+
+Code (Text):
+cat /tmp/AppleIntelInfo.dat
+The amount of power states will then show in the Terminal window.
+===================
+NVRAM Testing: You can test if your NVRAM is working by running the following Terminal command and rebooting: 
+sudo nvram TestVar=HelloWorld
+once you reboot, run:
+sudo nvram -p | grep 'TestVar'
+if you see a result, your NVRAM is working; if not, your NVRAM is broken and needs to be fixed, or otherwise iMessage won't work; after testing, you can delete the TestVar variable by running 
+sudo nvram -d TestVar
